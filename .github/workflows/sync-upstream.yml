@@ -167,7 +167,6 @@ jobs:
           main = "dist/worker.js"
           compatibility_date = "2024-09-23"
           compatibility_flags = ["nodejs_compat"]
-          pages_build_output_dir = "pages-dist"
 
           [[kv_namespaces]]
           binding = "SUB_STORE_DATA"
@@ -211,6 +210,7 @@ jobs:
             --project-name "${{ secrets.PAGES_PROJECT_NAME }}" \
             --branch main \
             --bundle \
+            --no-config \
             --commit-message "upstream ${{ steps.upstream.outputs.version }}" \
             --commit-dirty=true
 
