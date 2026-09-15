@@ -2,6 +2,7 @@ name = "sub-store-workers"
 main = "dist/worker.js"
 compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = "pages-dist"
 
 # KV Namespace bindings
 # For production: run `wrangler kv namespace create SUB_STORE_DATA` and fill in the id
