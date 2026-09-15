@@ -183,13 +183,6 @@ jobs:
           echo "Generated wrangler.toml:"
           cat wrangler.toml
 
-          # 生成专用于 Pages 的空白配置文件，防止读取 Workers 配置
-          cat > wrangler.pages.toml <<'TOML'
-          pages_build_output_dir = "pages-dist"
-          compatibility_date = "2024-09-23"
-          compatibility_flags = ["nodejs_compat"]
-          TOML
-
       - name: Deploy Workers
         if: steps.check.outputs.needed == 'true'
         working-directory: sub-store-workers
@@ -203,9 +196,9 @@ jobs:
         working-directory: sub-store-workers
         run: |
           mkdir -p pages-dist
-          # 复制 dist 下所有文件（包含 worker.js 以及 quickjs.wasm 等二进制资源）
+          # 复制 dist 目录下的完整文件（含 quickjs.wasm 等资源文件）
           cp -r dist/* pages-dist/
-          # 将 worker.js 命名为 Pages 函数指定的入口 _worker.js
+          # 将 worker.js 重命名为 Pages Functions 规范入口 _worker.js
           cp dist/worker.js pages-dist/_worker.js
 
       - name: Deploy Pages
@@ -216,10 +209,8 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           npx wrangler pages deploy pages-dist \
-            --config wrangler.pages.toml \
             --project-name "${{ secrets.PAGES_PROJECT_NAME }}" \
             --branch main \
-            --bundle \
             --commit-message "upstream ${{ steps.upstream.outputs.version }}" \
             --commit-dirty=true
 
